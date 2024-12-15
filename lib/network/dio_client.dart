@@ -131,7 +131,6 @@ class DioClient {
     if (!isOnline) {
       return null;
     }
-    // ?page=$page&per_page=$perPage
     try {
       final response =
           await _dio.get(Endpoints.repositoriesEndpoint, queryParameters: {
@@ -143,16 +142,26 @@ class DioClient {
       if (response.statusCode == _code200) {
         var data = response.data;
         if (data != null) {
-          return (data as List).map((e) {
+          final repos = (data as List).map((e) async {
             final repo = RepositoriesResponse.fromJson(e);
+            final isStarred = (repo.stargazersCount?.toInt() ?? 0) > 0 &&
+                    repo.owner?.login != null &&
+                    repo.name != null
+                ? (await isRepositoryStarred(
+                    repo.owner!.login!,
+                    repo.name!,
+                  ))
+                : false;
             return DbRepo()
               ..id = repo.id!.toInt()
               ..name = repo.name
               ..description = repo.description
               ..lastUpdated = repo.updatedAt
+              ..isStarred = isStarred
               ..stars = repo.stargazersCount?.toInt()
               ..forks = repo.forksCount?.toInt();
           }).toList();
+          return await Future.wait(repos);
         }
         return null;
       } else {
@@ -164,6 +173,20 @@ class DioClient {
     } catch (e) {
       if (kDebugMode) print(e);
       return null;
+    }
+  }
+
+  Future<bool> isRepositoryStarred(String owner, String repo) async {
+    final response = await _dio.get(
+      '/user/starred/$owner/$repo',
+    );
+
+    if (response.statusCode == 204) {
+      return true; // Starred
+    } else if (response.statusCode == 404) {
+      return false; // Not starred
+    } else {
+      return false;
     }
   }
 }

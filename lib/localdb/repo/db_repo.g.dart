@@ -27,18 +27,23 @@ const DbRepoSchema = CollectionSchema(
       name: r'forks',
       type: IsarType.long,
     ),
-    r'lastUpdated': PropertySchema(
+    r'isStarred': PropertySchema(
       id: 2,
+      name: r'isStarred',
+      type: IsarType.bool,
+    ),
+    r'lastUpdated': PropertySchema(
+      id: 3,
       name: r'lastUpdated',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'name',
       type: IsarType.string,
     ),
     r'stars': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'stars',
       type: IsarType.long,
     )
@@ -92,9 +97,10 @@ void _dbRepoSerialize(
 ) {
   writer.writeString(offsets[0], object.description);
   writer.writeLong(offsets[1], object.forks);
-  writer.writeString(offsets[2], object.lastUpdated);
-  writer.writeString(offsets[3], object.name);
-  writer.writeLong(offsets[4], object.stars);
+  writer.writeBool(offsets[2], object.isStarred);
+  writer.writeString(offsets[3], object.lastUpdated);
+  writer.writeString(offsets[4], object.name);
+  writer.writeLong(offsets[5], object.stars);
 }
 
 DbRepo _dbRepoDeserialize(
@@ -107,9 +113,10 @@ DbRepo _dbRepoDeserialize(
   object.description = reader.readStringOrNull(offsets[0]);
   object.forks = reader.readLongOrNull(offsets[1]);
   object.id = id;
-  object.lastUpdated = reader.readStringOrNull(offsets[2]);
-  object.name = reader.readStringOrNull(offsets[3]);
-  object.stars = reader.readLongOrNull(offsets[4]);
+  object.isStarred = reader.readBoolOrNull(offsets[2]);
+  object.lastUpdated = reader.readStringOrNull(offsets[3]);
+  object.name = reader.readStringOrNull(offsets[4]);
+  object.stars = reader.readLongOrNull(offsets[5]);
   return object;
 }
 
@@ -125,10 +132,12 @@ P _dbRepoDeserializeProp<P>(
     case 1:
       return (reader.readLongOrNull(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
+      return (reader.readStringOrNull(offset)) as P;
+    case 5:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -485,6 +494,32 @@ extension DbRepoQueryFilter on QueryBuilder<DbRepo, DbRepo, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<DbRepo, DbRepo, QAfterFilterCondition> isStarredIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isStarred',
+      ));
+    });
+  }
+
+  QueryBuilder<DbRepo, DbRepo, QAfterFilterCondition> isStarredIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isStarred',
+      ));
+    });
+  }
+
+  QueryBuilder<DbRepo, DbRepo, QAfterFilterCondition> isStarredEqualTo(
+      bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isStarred',
+        value: value,
       ));
     });
   }
@@ -878,6 +913,18 @@ extension DbRepoQuerySortBy on QueryBuilder<DbRepo, DbRepo, QSortBy> {
     });
   }
 
+  QueryBuilder<DbRepo, DbRepo, QAfterSortBy> sortByIsStarred() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isStarred', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DbRepo, DbRepo, QAfterSortBy> sortByIsStarredDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isStarred', Sort.desc);
+    });
+  }
+
   QueryBuilder<DbRepo, DbRepo, QAfterSortBy> sortByLastUpdated() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastUpdated', Sort.asc);
@@ -952,6 +999,18 @@ extension DbRepoQuerySortThenBy on QueryBuilder<DbRepo, DbRepo, QSortThenBy> {
     });
   }
 
+  QueryBuilder<DbRepo, DbRepo, QAfterSortBy> thenByIsStarred() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isStarred', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DbRepo, DbRepo, QAfterSortBy> thenByIsStarredDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isStarred', Sort.desc);
+    });
+  }
+
   QueryBuilder<DbRepo, DbRepo, QAfterSortBy> thenByLastUpdated() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastUpdated', Sort.asc);
@@ -1003,6 +1062,12 @@ extension DbRepoQueryWhereDistinct on QueryBuilder<DbRepo, DbRepo, QDistinct> {
     });
   }
 
+  QueryBuilder<DbRepo, DbRepo, QDistinct> distinctByIsStarred() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isStarred');
+    });
+  }
+
   QueryBuilder<DbRepo, DbRepo, QDistinct> distinctByLastUpdated(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1040,6 +1105,12 @@ extension DbRepoQueryProperty on QueryBuilder<DbRepo, DbRepo, QQueryProperty> {
   QueryBuilder<DbRepo, int?, QQueryOperations> forksProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'forks');
+    });
+  }
+
+  QueryBuilder<DbRepo, bool?, QQueryOperations> isStarredProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isStarred');
     });
   }
 

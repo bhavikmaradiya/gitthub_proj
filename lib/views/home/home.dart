@@ -92,6 +92,23 @@ class _HomeState extends State<Home> {
         context,
         Routes.splash,
       );
+    } else if (state is StarredFilterUpdatedState) {
+      if (state.isApplied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _appLocalizations!.starredApplied,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: Dimens.dimens_15.sp,
+              ),
+            ),
+            duration: const Duration(
+              seconds: AppConfig.defaultSnackBarDuration,
+            ),
+          ),
+        );
+      }
     }
   }
 
@@ -102,185 +119,65 @@ class _HomeState extends State<Home> {
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Stack(
           children: [
-            ToolBar(
-              title: _appLocalizations!.appName,
-              onInwardSearch: () {
-                _homeBloc?.add(SearchInitializeEvent());
-              },
-              onLogout: () {
-                showDialog(
-                    context: context,
-                    useSafeArea: true,
-                    builder: (dialogContext) {
-                      return Center(
-                        child: Material(
-                          color: Colors.transparent,
-                          child: Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal:
-                                    MediaQuery.sizeOf(context).width * 0.07),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: LightColorsConfig.lightBlackColor,
-                              borderRadius: BorderRadius.circular(
-                                Dimens.dimens_10.r,
+            BlocBuilder<HomeBloc, HomeState>(
+              buildWhen: (_, current) => current is StarredFilterUpdatedState,
+              builder: (_, state) {
+                final isApplied =
+                    state is StarredFilterUpdatedState && state.isApplied;
+                return ToolBar(
+                  title: _appLocalizations!.appName,
+                  onInwardSearch: () {
+                    _homeBloc?.add(SearchInitializeEvent());
+                  },
+                  starredFilter: Container(
+                    decoration: BoxDecoration(
+                      color: isApplied ? Colors.grey[350] : Colors.transparent,
+                      borderRadius: BorderRadius.circular(
+                        Dimens.dimens_7.r,
+                      ),
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => _homeBloc?.add(
+                          SwitchStarredFilterEvent(),
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          Dimens.dimens_7.r,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: Dimens.dimens_5.w,
+                            vertical: Dimens.dimens_2.w,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                                size: Dimens.dimens_27.r,
                               ),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: double.infinity,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xff30343a),
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(
-                                        Dimens.dimens_10.r,
-                                      ),
-                                    ),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: Dimens.dimens_12.h,
-                                  ),
-                                  child: Text(
-                                    _appLocalizations!.logout,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                      fontSize: Dimens.dimens_22.sp,
-                                    ),
-                                  ),
+                              if (isApplied)
+                                SizedBox(
+                                  width: Dimens.dimens_5.w,
                                 ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: Dimens.dimens_15.h,
-                                    horizontal: Dimens.dimens_10.w,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        _appLocalizations!.logoutMsg,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color:
-                                              LightColorsConfig.lightWhiteColor,
-                                          fontSize: Dimens.dimens_18.sp,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: Dimens.dimens_50.h,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: LightColorsConfig
-                                                    .lightWhiteColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                  Dimens.dimens_10.r,
-                                                ),
-                                              ),
-                                              alignment: Alignment.center,
-                                              child: Material(
-                                                color: Colors.transparent,
-                                                child: InkWell(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                    Dimens.dimens_10.r,
-                                                  ),
-                                                  onTap: () => Navigator.pop(
-                                                    dialogContext,
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                      horizontal:
-                                                          Dimens.dimens_12.w,
-                                                      vertical:
-                                                          Dimens.dimens_12.w,
-                                                    ),
-                                                    child: Text(
-                                                      _appLocalizations!.cancel,
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize:
-                                                            Dimens.dimens_18.sp,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: Dimens.dimens_10.w,
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: LightColorsConfig
-                                                    .lightWhiteColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                  Dimens.dimens_10.r,
-                                                ),
-                                              ),
-                                              alignment: Alignment.center,
-                                              child: Material(
-                                                color: Colors.transparent,
-                                                child: InkWell(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                    Dimens.dimens_10.r,
-                                                  ),
-                                                  onTap: () async {
-                                                    Navigator.pop(
-                                                      dialogContext,
-                                                    );
-                                                    _homeBloc?.add(
-                                                      HomeLogoutEvent(),
-                                                    );
-                                                  },
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                      horizontal:
-                                                          Dimens.dimens_12.w,
-                                                      vertical:
-                                                          Dimens.dimens_12.w,
-                                                    ),
-                                                    child: Text(
-                                                      _appLocalizations!.logout,
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize:
-                                                            Dimens.dimens_18.sp,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
+                              if (isApplied)
+                                Icon(
+                                  Icons.close,
+                                  color: Colors.black,
+                                  size: Dimens.dimens_19.r,
                                 ),
-                              ],
-                            ),
+                            ],
                           ),
                         ),
-                      );
-                    });
+                      ),
+                    ),
+                  ),
+                  onLogout: () {
+                    _showLogoutDialog();
+                  },
+                );
               },
             ),
             _searchWidget(_homeBloc),
@@ -290,7 +187,9 @@ class _HomeState extends State<Home> {
       body: BlocListener<HomeBloc, HomeState>(
         listener: _listenToHomeStates,
         listenWhen: (_, current) =>
-            current is LogoutSuccessfulState || current is NetworkSwitchState,
+            current is LogoutSuccessfulState ||
+            current is NetworkSwitchState ||
+            current is StarredFilterUpdatedState,
         child: SafeArea(
             child: BlocBuilder<HomeBloc, HomeState>(
           buildWhen: (previous, current) =>
@@ -299,6 +198,8 @@ class _HomeState extends State<Home> {
                   current is HomeRepositoryFoundState ||
                   current is HomeEmptyState ||
                   current is SearchDataState ||
+                  current is StarredFilterUpdatedState ||
+                  current is StarredFilterRemovedState ||
                   current is SearchCompletedState),
           builder: (context, state) {
             if (state is HomeLoadingState && !state.isPagination) {
@@ -324,8 +225,13 @@ class _HomeState extends State<Home> {
               return _emptyWidget(
                 _appLocalizations!.repositoryNotFound,
               );
-            } else if (state is SearchDataState) {
-              final searchedList = state.searchedRepos;
+            } else if (state is SearchDataState ||
+                state is StarredFilterUpdatedState) {
+              final searchedList = state is SearchDataState
+                  ? state.searchedRepos
+                  : state is StarredFilterUpdatedState
+                      ? (state.data ?? <DbRepo>[])
+                      : <DbRepo>[];
               if (searchedList.isNotEmpty) {
                 return _dataWidget(searchedList);
               } else {
@@ -333,12 +239,21 @@ class _HomeState extends State<Home> {
                   _appLocalizations!.noRecordWithSearch,
                 );
               }
-            } else if (state is SearchCompletedState) {
-              final data = state.repositories;
+            } else if (state is SearchCompletedState ||
+                state is StarredFilterRemovedState) {
+              final data = state is StarredFilterRemovedState
+                  ? state.repositories
+                  : state is SearchCompletedState
+                      ? state.repositories
+                      : <DbRepo>[];
               if (data.isNotEmpty) {
                 return _dataWidget(
                   data,
-                  hasMore: state.hasMore,
+                  hasMore: state is StarredFilterRemovedState
+                      ? state.hasMore
+                      : state is SearchCompletedState
+                          ? state.hasMore
+                          : false,
                 );
               }
             }
@@ -348,6 +263,165 @@ class _HomeState extends State<Home> {
           },
         )),
       ),
+    );
+  }
+
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      useSafeArea: true,
+      builder: (dialogContext) {
+        return Center(
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              margin: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.sizeOf(context).width * 0.07),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: LightColorsConfig.lightBlackColor,
+                borderRadius: BorderRadius.circular(
+                  Dimens.dimens_10.r,
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: const Color(0xff30343a),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(
+                          Dimens.dimens_10.r,
+                        ),
+                      ),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      vertical: Dimens.dimens_12.h,
+                    ),
+                    child: Text(
+                      _appLocalizations!.logout,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        fontSize: Dimens.dimens_22.sp,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: Dimens.dimens_15.h,
+                      horizontal: Dimens.dimens_10.w,
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          _appLocalizations!.logoutMsg,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: LightColorsConfig.lightWhiteColor,
+                            fontSize: Dimens.dimens_18.sp,
+                          ),
+                        ),
+                        SizedBox(
+                          height: Dimens.dimens_50.h,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: LightColorsConfig.lightWhiteColor,
+                                  borderRadius: BorderRadius.circular(
+                                    Dimens.dimens_10.r,
+                                  ),
+                                ),
+                                alignment: Alignment.center,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(
+                                      Dimens.dimens_10.r,
+                                    ),
+                                    onTap: () => Navigator.pop(
+                                      dialogContext,
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: Dimens.dimens_12.w,
+                                        vertical: Dimens.dimens_12.w,
+                                      ),
+                                      child: Text(
+                                        _appLocalizations!.cancel,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: Dimens.dimens_18.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: Dimens.dimens_10.w,
+                            ),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: LightColorsConfig.lightWhiteColor,
+                                  borderRadius: BorderRadius.circular(
+                                    Dimens.dimens_10.r,
+                                  ),
+                                ),
+                                alignment: Alignment.center,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(
+                                      Dimens.dimens_10.r,
+                                    ),
+                                    onTap: () async {
+                                      Navigator.pop(
+                                        dialogContext,
+                                      );
+                                      _homeBloc?.add(
+                                        HomeLogoutEvent(),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: Dimens.dimens_12.w,
+                                        vertical: Dimens.dimens_12.w,
+                                      ),
+                                      child: Text(
+                                        _appLocalizations!.logout,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: Dimens.dimens_18.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

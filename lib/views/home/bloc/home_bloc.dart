@@ -24,6 +24,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   bool _disablePullToRefreshLoadMore = false;
   final List<DbRepo> _repositories = [];
   bool _isOnline = false;
+  bool _showOnlyStarredByYou = false;
   String _searchText = '';
   StreamSubscription<bool>? _networkListener;
 
@@ -32,6 +33,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeInitialState()) {
     on<HomeInitialEvent>(_init);
     on<HomeLogoutEvent>(_onLogout);
+    on<SwitchStarredFilterEvent>(_onStarredFilter);
     on<FetchRepositoriesEvent>(_onFetchRepos);
     on<SearchInitializeEvent>(_onSearchInitialized);
     on<SearchTextChangedEvent>(_onSearchTextChanged);
@@ -49,6 +51,57 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     await _networkListener?.asFuture();
   }
 
+  void _onStarredFilter(
+    SwitchStarredFilterEvent event,
+    Emitter<HomeState> emit,
+  ) {
+    _showOnlyStarredByYou = !_showOnlyStarredByYou;
+
+    if (_showOnlyStarredByYou) {
+      _applyStarredFilter(emit);
+    } else {
+      emit(
+        StarredFilterUpdatedState(
+          _showOnlyStarredByYou,
+        ),
+      );
+      _disablePullToRefreshLoadMore = !_isOnline;
+      _sortMyRepos();
+      emit(
+        StarredFilterRemovedState(
+          _repositories,
+          _hasMoreData,
+        ),
+      );
+    }
+  }
+
+  _applyStarredFilter(
+    Emitter<HomeState> emit,
+  ) {
+    _disablePullToRefreshLoadMore = true;
+    final starredRepos =
+        _repositories.where((e) => e.isStarred == true).toList();
+    starredRepos.sort((a, b) {
+      if (a.lastUpdated == null || a.lastUpdated!.isEmpty) {
+        return b.lastUpdated == null || b.lastUpdated!.isEmpty ? 0 : 1;
+      }
+      if (b.lastUpdated == null || b.lastUpdated!.isEmpty) {
+        return -1;
+      }
+
+      final dateA = DateTime.parse(a.lastUpdated!);
+      final dateB = DateTime.parse(b.lastUpdated!);
+      return dateB.compareTo(dateA); // Sort by descending date
+    });
+    emit(
+      StarredFilterUpdatedState(
+        _showOnlyStarredByYou,
+        data: starredRepos,
+      ),
+    );
+  }
+
   _listenToNetworkChanges(
     Emitter<HomeState> emit,
   ) {
@@ -60,7 +113,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         _disablePullToRefreshLoadMore = !_isOnline;
         if (_isOnline) {
           _isLoading = false;
-          await Future.delayed(const Duration(seconds: 2));
         }
         _fetchInitialData(emit);
         emit(
@@ -89,13 +141,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     reposForSearch.addAll(_repositories);
     final filterList = reposForSearch
         .where((element) =>
-            (element.name != null &&
-                element.name!.trim().toLowerCase().contains(_searchText)) ||
-            (element.description != null &&
-                element.description!
-                    .trim()
-                    .toLowerCase()
-                    .contains(_searchText)))
+            (!_showOnlyStarredByYou ||
+                (_showOnlyStarredByYou && element.isStarred == true)) &&
+            ((element.name != null &&
+                    element.name!.trim().toLowerCase().contains(_searchText)) ||
+                (element.description != null &&
+                    element.description!
+                        .trim()
+                        .toLowerCase()
+                        .contains(_searchText))))
         .toList();
     filterList.sort((a, b) {
       if (a.lastUpdated == null || a.lastUpdated!.isEmpty) {
@@ -117,6 +171,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) {
     _searchText = '';
+
     _disablePullToRefreshLoadMore = !_isOnline;
     emit(
       SearchCompletedState(
@@ -124,6 +179,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         _hasMoreData,
       ),
     );
+    if (_showOnlyStarredByYou) {
+      _applyStarredFilter(emit);
+    }
   }
 
   _fetchInitialData(

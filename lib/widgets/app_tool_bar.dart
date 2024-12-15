@@ -10,16 +10,16 @@ import '../const/strings.dart';
 
 class ToolBar extends StatelessWidget {
   final String title;
-  final Function? onFilterClearAll;
   final Function? onInwardSearch;
   final Function? onLogout;
+  final Widget? starredFilter;
 
   const ToolBar({
     Key? key,
     required this.title,
-    this.onFilterClearAll,
     this.onInwardSearch,
     this.onLogout,
+    this.starredFilter,
   }) : super(key: key);
 
   @override
@@ -70,19 +70,14 @@ class ToolBar extends StatelessWidget {
           ),
         ),
         actions: [
-          /* if (onFilterClearAll != null)
-            InkWell(
-              onTap: () {
-                onFilterClearAll!();
-              },
-              borderRadius: BorderRadius.circular(
-                Dimens.dimens_10.r,
-              ),
-              child: _filterClearAllWidget(
-                context,
-                appLocalizations,
-              ),
-            ),*/
+          if (starredFilter != null)
+            Container(
+              child: starredFilter!,
+            ),
+          if (starredFilter != null)
+            SizedBox(
+              width: Dimens.dimens_7.w,
+            ),
           if (onInwardSearch != null)
             InkWell(
               onTap: () {

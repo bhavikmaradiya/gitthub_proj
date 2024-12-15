@@ -8,6 +8,27 @@ class HomeEmptyState extends HomeState {}
 
 class LogoutSuccessfulState extends HomeState {}
 
+class StarredFilterUpdatedState extends HomeState {
+  final bool isApplied;
+  final List<DbRepo>? data;
+
+  StarredFilterUpdatedState(
+    this.isApplied, {
+    this.data,
+  });
+}
+
+class StarredFilterRemovedState extends HomeState {
+  final List<DbRepo> repositories;
+  final bool hasMore;
+
+  StarredFilterRemovedState(
+      this.repositories,
+      this.hasMore,
+      );
+
+}
+
 class SearchDataState extends HomeState {
   final List<DbRepo> searchedRepos;
 

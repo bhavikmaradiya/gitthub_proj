@@ -3,6 +3,7 @@ part of 'home_bloc.dart';
 abstract class HomeEvent {}
 
 class HomeInitialEvent extends HomeEvent {}
+
 class HomeLogoutEvent extends HomeEvent {}
 
 class FetchRepositoriesEvent extends HomeEvent {
@@ -16,6 +17,8 @@ class FetchRepositoriesEvent extends HomeEvent {
 }
 
 class SearchInitializeEvent extends HomeEvent {}
+
+class SwitchStarredFilterEvent extends HomeEvent {}
 
 class SearchTextChangedEvent extends HomeEvent {
   final String searchBy;

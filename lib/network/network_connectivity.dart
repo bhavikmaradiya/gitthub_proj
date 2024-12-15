@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/material.dart';
 
 // Ref. https://www.flutterbeads.com/flutter-internet-connection-checker/#:~:text=To%20check%20the%20internet%20connection%20in%20Flutter%2C%20you%20need%20to,changes%20by%20calling%20its%20onConnectivityChanged
 class NetworkConnectivity {
@@ -27,7 +25,7 @@ class NetworkConnectivity {
     bool isOnline = false;
     if (!result.contains(ConnectivityResult.none)) {
       try {
-        final result = await InternetAddress.lookup('example.com');
+        final result = await InternetAddress.lookup('google.com');
         isOnline = result.isNotEmpty && result[0].rawAddress.isNotEmpty;
       } on SocketException catch (_) {
         isOnline = false;
@@ -38,7 +36,7 @@ class NetworkConnectivity {
 
   static Future<bool> hasNetwork() async {
     try {
-      final result = await InternetAddress.lookup('example.com');
+      final result = await InternetAddress.lookup('google.com');
       return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
     } on SocketException catch (_) {
       return false;

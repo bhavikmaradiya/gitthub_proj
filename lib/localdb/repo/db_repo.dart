@@ -9,5 +9,6 @@ class DbRepo {
   String? description;
   int? stars;
   int? forks;
+  bool? isStarred;
   String? lastUpdated;
 }

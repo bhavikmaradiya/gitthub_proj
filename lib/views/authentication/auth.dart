@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gitthub_proj/config/light_colors_config.dart';
+import 'package:gitthub_proj/network/network_connectivity.dart';
 import 'package:gitthub_proj/views/authentication/bloc/auth_bloc.dart';
 import '../../config/app_config.dart';
 import '../../const/assets.dart';
@@ -75,6 +76,30 @@ class _AuthState extends State<Auth> {
     }
   }
 
+  Future<void> _startAuthentication() async {
+    final isNetWorkAvailable = await NetworkConnectivity.hasNetwork();
+    if (isNetWorkAvailable) {
+      _authBloc?.add(
+        AuthStartEvent(),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            _appLocalizations!.noInternet,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: Dimens.dimens_15.sp,
+            ),
+          ),
+          duration: const Duration(
+            seconds: AppConfig.defaultSnackBarDuration,
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
@@ -94,9 +119,7 @@ class _AuthState extends State<Auth> {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () => _authBloc?.add(
-                  AuthStartEvent(),
-                ),
+                onTap: () => _startAuthentication(),
                 borderRadius: BorderRadius.circular(
                   Dimens.dimens_10.r,
                 ),
