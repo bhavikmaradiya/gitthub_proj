@@ -1,0 +1,27 @@
+{
+  "appName": "GittHUB",
+  "signInWithGithub": "Sign in with GittHUB",
+  "repositoryNotFound": "No repositories found",
+  "authError": "Failed to authenticate!",
+  "noRecordWithSearch": "No match found",
+  "unknown": "Unknown",
+  "notAvailable": "N/A",
+  "search": "Search",
+  "logoutSuccess": "You've been logged out successfully!",
+  "logout": "Logout",
+  "cancel": "Cancel",
+  "logoutMsg": "Are you sure you want to logout?",
+  "noDescription": "No description available.",
+  "switchToOffline": "Switching to offline mode",
+  "switchToOnline": "Switching to online mode",
+  "githubSubtitle": "\" Git commit, git blame, git regret \"",
+  "lastUpdated": "Last updated:  {date}",
+  "@lastUpdated": {
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "12-Dec-2024"
+      }
+    }
+  }
+}
