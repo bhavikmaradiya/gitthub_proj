@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../config/light_colors_config.dart';
+
 class LoadingProgress {
   static bool _isDialogShowing = false;
 
-  static showHideProgress(BuildContext context, bool isLoading) {
+  static showHideProgress(
+    BuildContext context,
+    bool isLoading,
+  ) {
     if (isLoading && !_isDialogShowing) {
       _isDialogShowing = true;
       showGeneralDialog(
@@ -15,9 +20,9 @@ class LoadingProgress {
             onWillPop: () async => false,
             child: Center(
               child: isLoading
-                  ? const AbsorbPointer(
+                  ? AbsorbPointer(
                       child: CircularProgressIndicator(
-                        color: Colors.blueAccent,
+                        color: LightColorsConfig.lightWhiteColor,
                       ),
                     )
                   : const SizedBox(),

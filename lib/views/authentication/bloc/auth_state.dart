@@ -8,4 +8,10 @@ class AuthSuccessState extends AuthState {}
 
 class AuthFailedState extends AuthState {}
 
-class AuthLoadingState extends AuthState {}
+class AuthLoadingState extends AuthState {
+  final bool isLoading;
+
+  AuthLoadingState({
+    this.isLoading = true,
+  });
+}

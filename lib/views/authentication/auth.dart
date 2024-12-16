@@ -51,7 +51,7 @@ class _AuthState extends State<Auth> {
   void _listenAuthChanges(context, state) {
     LoadingProgress.showHideProgress(
       context,
-      state is AuthLoadingState,
+      state is AuthLoadingState && state.isLoading,
     );
     if (state is AuthSuccessState) {
       Navigator.pushReplacementNamed(

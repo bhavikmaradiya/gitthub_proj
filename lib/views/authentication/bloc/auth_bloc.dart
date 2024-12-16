@@ -109,9 +109,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         url: url,
         callbackUrlScheme: "myapp",
       );
+      emit(AuthLoadingState(
+        isLoading: false,
+      ));
       final code = Uri.parse(result).queryParameters['code'];
       debugPrint('Code:: $code');
     } catch (e) {
+      emit(AuthLoadingState(
+        isLoading: false,
+      ));
       debugPrint('Exception:: $e');
     }
   }

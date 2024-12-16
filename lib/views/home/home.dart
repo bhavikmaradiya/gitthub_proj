@@ -276,7 +276,8 @@ class _HomeState extends State<Home> {
             color: Colors.transparent,
             child: Container(
               margin: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.sizeOf(context).width * 0.07),
+                horizontal: MediaQuery.sizeOf(context).width * 0.07,
+              ),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: LightColorsConfig.lightBlackColor,
@@ -412,7 +413,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -526,7 +527,7 @@ class _HomeState extends State<Home> {
                     ),
                     SizedBox(
                       height: Dimens.dimens_150.h,
-                    )
+                    ),
                   ],
                 );
               }
