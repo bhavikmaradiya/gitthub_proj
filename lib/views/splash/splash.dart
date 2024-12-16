@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gitthub_proj/config/light_colors_config.dart';
-import 'package:gitthub_proj/const/assets.dart';
 
+import '../../config/light_colors_config.dart';
+import '../../const/assets.dart';
 import '../../const/dimens.dart';
 import '../../const/routes.dart';
 import './bloc/splash_bloc.dart';

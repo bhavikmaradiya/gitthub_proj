@@ -1,11 +1,11 @@
-import 'package:gitthub_proj/config/preference_config.dart';
-import 'package:gitthub_proj/localdb/repo/db_repo.dart';
-import 'package:gitthub_proj/localdb/user/db_user.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../config/preference_config.dart';
 import '../utils/static_functions.dart';
+import 'repo/db_repo.dart';
+import 'user/db_user.dart';
 
 class IsarService {
   late Future<Isar> db;

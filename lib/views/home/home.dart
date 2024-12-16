@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gitthub_proj/config/theme_config.dart';
 import 'package:gitthub_proj/localdb/repo/db_repo.dart';
 
 import '../../config/app_config.dart';
@@ -15,7 +14,6 @@ import '../../network/network_connectivity.dart';
 import '../../widgets/app_search_view.dart';
 import '../../widgets/app_tool_bar.dart';
 import 'bloc/home_bloc.dart';
-import 'model/repositories_response.dart';
 import 'widget/list_item_shimmer.dart';
 import 'widget/repo_item_widget.dart';
 

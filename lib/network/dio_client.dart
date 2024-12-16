@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gitthub_proj/localdb/repo/db_repo.dart';
-import 'package:gitthub_proj/views/authentication/model/access_token_response.dart';
-import 'package:gitthub_proj/views/authentication/model/user_response.dart';
-import 'package:gitthub_proj/views/home/model/repositories_response.dart';
 
 import '../config/app_config.dart';
+import '../localdb/repo/db_repo.dart';
+import '../views/authentication/model/access_token_response.dart';
+import '../views/authentication/model/user_response.dart';
+import '../views/home/model/repositories_response.dart';
 import 'endpoints.dart';
 import 'interceptors/authorization_interceptor.dart';
 import 'interceptors/logger_interceptor.dart';
@@ -132,13 +132,15 @@ class DioClient {
       return null;
     }
     try {
-      final response =
-          await _dio.get(Endpoints.repositoriesEndpoint, queryParameters: {
-        'page': page,
-        'per_page': pageLimit,
-        'sort': 'updated',
-        'direction': 'desc',
-      });
+      final response = await _dio.get(
+        Endpoints.repositoriesEndpoint,
+        queryParameters: {
+          'page': page,
+          'per_page': pageLimit,
+          'sort': 'updated',
+          'direction': 'desc',
+        },
+      );
       if (response.statusCode == _code200) {
         var data = response.data;
         if (data != null) {
@@ -176,7 +178,10 @@ class DioClient {
     }
   }
 
-  Future<bool> isRepositoryStarred(String owner, String repo) async {
+  Future<bool> isRepositoryStarred(
+    String owner,
+    String repo,
+  ) async {
     final response = await _dio.get(
       '/user/starred/$owner/$repo',
     );

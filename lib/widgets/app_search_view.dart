@@ -11,10 +11,10 @@ class AppSearchView extends StatelessWidget {
   final Function(String) onTextChange;
 
   const AppSearchView({
-    Key? key,
+    super.key,
     required this.onCloseSearch,
     required this.onTextChange,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

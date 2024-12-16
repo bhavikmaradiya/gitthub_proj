@@ -6,7 +6,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../config/theme_config.dart';
 import '../const/assets.dart';
 import '../const/dimens.dart';
-import '../const/strings.dart';
 
 class ToolBar extends StatelessWidget {
   final String title;
@@ -15,12 +14,12 @@ class ToolBar extends StatelessWidget {
   final Widget? starredFilter;
 
   const ToolBar({
-    Key? key,
+    super.key,
     required this.title,
     this.onInwardSearch,
     this.onLogout,
     this.starredFilter,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

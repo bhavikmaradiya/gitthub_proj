@@ -1,19 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gitthub_proj/localdb/isar_service.dart';
-import 'package:gitthub_proj/localdb/repo/db_repo.dart';
-import 'package:gitthub_proj/network/dio_client.dart';
-import 'package:gitthub_proj/network/network_connectivity.dart';
-import 'package:gitthub_proj/views/home/model/repositories_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../config/app_config.dart';
+import '../../../localdb/isar_service.dart';
+import '../../../localdb/repo/db_repo.dart';
+import '../../../network/dio_client.dart';
+import '../../../network/network_connectivity.dart';
 
 part 'home_event.dart';
-
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {

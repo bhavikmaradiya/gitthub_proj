@@ -1,14 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gitthub_proj/localdb/isar_service.dart';
-import 'package:gitthub_proj/utils/static_functions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../config/app_config.dart';
 import '../../../config/preference_config.dart';
 import '../../../const/routes.dart';
+import '../../../localdb/isar_service.dart';
+import '../../../utils/static_functions.dart';
 
 part 'splash_event.dart';
-
 part 'splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {

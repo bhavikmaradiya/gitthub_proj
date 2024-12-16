@@ -1,18 +1,15 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
-import 'package:gitthub_proj/localdb/isar_service.dart';
-import 'package:gitthub_proj/utils/static_functions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../config/preference_config.dart';
+import '../../../localdb/isar_service.dart';
 import '../../../localdb/user/db_user.dart';
 import '../../../network/dio_client.dart';
+import '../../../utils/static_functions.dart';
 
 part 'auth_event.dart';
-
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
