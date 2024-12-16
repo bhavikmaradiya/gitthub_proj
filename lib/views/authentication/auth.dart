@@ -103,7 +103,10 @@ class _AuthState extends State<Auth> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
-      listenWhen: (_, current) => current is AuthSuccessState,
+      listenWhen: (_, current) =>
+          current is AuthSuccessState ||
+          current is AuthFailedState ||
+          current is AuthLoadingState,
       listener: _listenAuthChanges,
       child: Scaffold(
         body: Center(
